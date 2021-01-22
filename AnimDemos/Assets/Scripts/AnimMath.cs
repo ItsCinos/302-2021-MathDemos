@@ -8,8 +8,8 @@ public static class AnimMath
     {
         if(!allowExtrapolation)
         {
-            if (p < 0) p = 0;
-            if (p > 0) p = 1;
+            if (p < 0) return min;
+            if (p > 0) return max;
         }
         
         
@@ -18,11 +18,29 @@ public static class AnimMath
 
     public static Vector3 Lerp(Vector3 min, Vector3 max, float p, bool allowExtrapolation = true)
     {
-        return (max - min) * p + min;
+        if (!allowExtrapolation)
+        {
+            if (p < 0) return min;
+            if (p > 0) return max;
+        }
 
-        //float x = Lerp(min.x, max.x, p);
-        //float y = Lerp(min.y, max.y, p);
-        //float z = Lerp(min.z, max.z, p);
-        //return new Vector3(x, y, z);
+            return (max - min) * p + min;
+
+            //float x = Lerp(min.x, max.x, p);
+            //float y = Lerp(min.y, max.y, p);
+            //float z = Lerp(min.z, max.z, p);
+            //return new Vector3(x, y, z);
+    }
+
+    public static float Slide(float current, float target, float percentLeftAfter1Second)
+    {
+        float p = 1 - Mathf.Pow(percentLeftAfter1Second, Time.deltaTime);
+        return AnimMath.Lerp(current, target, p);
+    }
+
+    public static Vector3 Slide(Vector3 current, Vector3 target, float percentLeftAfter1Second)
+    {
+        float p = 1 - Mathf.Pow(percentLeftAfter1Second, Time.deltaTime);
+        return AnimMath.Lerp(current, target, p);
     }
 }
